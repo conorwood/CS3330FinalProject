@@ -13,44 +13,101 @@ import java.util.Random;
 public class BattedBall implements Action
 {
     
-    @Override
+//    @Override
+//    public int actionGenerator()
+//    {
+//        Random r = new Random();
+//        int low = 1;
+//        int high = 6;
+//        int result = r.nextInt(high-low) + low;
+//        return result;
+//    }
+//    
+//    
+    
+    @Override 
     public int actionGenerator()
     {
         Random r = new Random();
         int low = 1;
-        int high = 6;
+        int high = 3;
         int result = r.nextInt(high-low) + low;
         return result;
     }
     
-    
+//    @Override 
+//    public int doAction()
+//    {
+//        int ballInPlay = actionGenerator();
+//        switch (ballInPlay)
+//        {
+//            case(1):
+//                System.out.println("Single!");
+//                return 1;
+//                //break;
+//            case(2):
+//               System.out.println("Double!");
+//               return 2;
+//               //break;
+//            case(3):
+//                System.out.println("Triple!");
+//                return 3;
+//                //break;
+//            case(4):
+//                System.out.println("Home Run!");
+//                return 4;
+//                //break;
+//            case(5):
+//                System.out.println("Out!");
+//                return 5;
+//        }
+//        return 0;
+//    }
+//}
+
     @Override 
     public int doAction()
     {
         int ballInPlay = actionGenerator();
-        switch (ballInPlay)
+        if (ballInPlay==1)
         {
-            case(1):
-                System.out.println("Single!");
-                return 1;
-                //break;
-            case(2):
-               System.out.println("Double!");
-               return 2;
-               //break;
-            case(3):
-                System.out.println("Triple!");
-                return 3;
-                //break;
-            case(4):
-                System.out.println("Home Run!");
-                return 4;
-                //break;
-            case(5):
-                System.out.println("Out!");
-                return 5;
+            return 5;
         }
-        return 0;
+        else
+        {
+            ballInPlay = hitType();
+            switch (ballInPlay)
+            {
+                case(1):
+                    System.out.println("Single!");
+                    return 1;
+                    //break;
+                case(2):
+                   System.out.println("Double!");
+                   return 2;
+                   //break;
+                case(3):
+                    System.out.println("Triple!");
+                    return 3;
+                    //break;
+                case(4):
+                    System.out.println("Home Run!");
+                    return 4;
+                    //break;
+                }
+        }
+        return 0;      
     }
+
+
+    private int hitType()
+    {
+       Random r = new Random();
+       int low = 1;
+       int high = 5;
+       int result = r.nextInt(high-low) + low;
+       return result; 
+    }
+
 }
 

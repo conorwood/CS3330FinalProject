@@ -11,6 +11,7 @@ package pkg3330finalproject;
 
 import java.io.*;
 import java.lang.IllegalStateException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.*;
 import java.util.*;
 
@@ -18,18 +19,26 @@ import java.util.*;
 public class FileReader
 {
     private static Scanner input;
-    
+    /*
     public static void readFile() throws Exception {
-    Scanner sc = new Scanner(new File("C:\\Users\\Conor Wood\\Documents\\CS 3330\\Final Project\\american.csv"));
-    //parsing a CSV file into the constructor of Scanner class 
-    sc.useDelimiter(",");
-    //setting comma as delimiter pattern
-    while (sc.hasNext()) {
-      System.out.printf(sc.next() + " ");
+        Scanner sc = new Scanner(new File("C:\\Users\\Conor Wood\\Documents\\CS 3330\\Final Project\\american.csv"));
+        //parsing a CSV file into the constructor of Scanner class 
+        sc.useDelimiter(",");
+        //setting comma as delimiter pattern
+        while (sc.hasNext()) 
+        {
+            String fName = sc.next();
+            String lName = sc.next();
+            String position = sc.next();
+            String stats = sc.next();
+            Player newPlayer = new Player(fName, lName, position, stats);
+            System.out.println(newPlayer.toString());
+          //System.out.printf(sc.next() + " ");
+        }
+        sc.close();
+        //closes the scanner  
     }
-    sc.close();
-    //closes the scanner  
-    }
+    */
     
     public static void openFile()
     {
@@ -67,6 +76,38 @@ public class FileReader
             
         }
     }
+    
+    public static ArrayList<Player> readFromCsv(String filename)
+    {
+        //ArrayList<Batter> roster = new ArrayList<>();
+        ArrayList<Player> roster = new ArrayList<>();
+        Path pathToFile = Paths.get(filename);
+        try (BufferedReader br = Files.newBufferedReader(pathToFile, StandardCharsets.US_ASCII))
+        {
+            String line = br.readLine();
+            while (line != null)
+            {
+                String[] attributes = line.split(",");
+                String fName = attributes[0];
+                String lName = attributes[1];
+                String position = attributes[2];
+                String stats = attributes[3];
+                Batter player = new Batter(fName, lName, position, stats);
+                roster.add(player);
+                
+                line = br.readLine();
+            }
+        }
+        
+        catch (IOException ioe)
+        {
+            System.out.println("Invalid File Name.");
+        }
+        
+        return roster;
+            
+    }
+    
     
     public static void closeFile()
     {

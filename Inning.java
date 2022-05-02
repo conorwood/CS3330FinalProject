@@ -15,18 +15,23 @@ public class Inning
 {
     private int m_outs;
     private AtBat m_AB;
-    private Team m_Team;
-    ArrayList<BaseRunner> m_baseRunners;
+    private Team m_team;
+    private Team m_awayTeam;
+    private Pitcher m_pitcher;
+    ArrayList<Batter> m_baseRunners;
     private int m_runsScored;
+    static private int m_positionInLineup=0;
     
-    public Inning()
+    public Inning(Team team, Pitcher pitcher)
     {
+        m_team = team;
+        m_pitcher = pitcher;
         m_outs = 0;
         m_AB = new AtBat();
         m_baseRunners = new ArrayList<>();
     }
     
-    private void scoreRun(BaseRunner runner)
+    private void scoreRun(Batter runner)
     {
         System.out.println("Run Scored!");
         runner.clearBase();
@@ -34,78 +39,49 @@ public class Inning
         m_runsScored++;
     }
     
+    /*
     private void addNewBaseRunner()
     {
-        BaseRunner newRunner = new BaseRunner();
+        Batter newRunner = new Batter();
         m_baseRunners.add(newRunner);
     }
+*/
     
-//    public void doInning()
-//    {
-//        ArrayList<BaseRunner> scoredRunners = new ArrayList<>();
-//        while (m_outs < 3)
-//        {
-//            int bases = m_AB.doAB();
-//            if (bases>0)
-//            {
-//                addNewBaseRunner();
-//                for (var v:m_baseRunners)
-//                {
-//                    v.advanceRunner(bases);
-//                    if (v.getCurrentBase() == 4)
-//                    {
-//                        scoredRunners.add(v);
-//                        scoreRun(scoredRunners);
-//                    }
-//                }
-//                
-//            }
-//                
-//            if (m_AB.checkIsOut()==true)
-//            {
-//                m_outs++;
-//                System.out.println("*** Outs = " + m_outs + " ***");
-//            }
-//        }
-//        System.out.println("Runs Scored this Inning: " + m_runsScored);
-//    }
+    private void addNewBaseRunner(int positionInLineup)
+    {
+        Batter newRunner = m_team.getBatter(positionInLineup);
+        m_baseRunners.add(newRunner);
+    }
+
     
     
     public void doInning()
     {
-        ArrayList<BaseRunner> scoredRunners = new ArrayList<>();
+        //int batterInLineup=0;
+        //System.out.println("Pitcher: " + m_Team.getPitcher().getFullName() + " " + m_Team.getPitcher().getERA());
+
+        System.out.println("Pitcher: " + m_pitcher.getFullName() + " " + m_pitcher.getERA() + "\n");
         while (m_outs < 3)
         {
-            int bases = m_AB.doAB();
+            if (m_positionInLineup > 8)
+            {
+                m_positionInLineup=0;
+            }
+            int bases = m_AB.doAB(m_pitcher, m_team.getBatter(m_positionInLineup));
             if (bases>0 && bases < 5)
             {
-                addNewBaseRunner();
+                m_positionInLineup++;
+                addNewBaseRunner(m_positionInLineup);
                 for (var v : m_baseRunners)
                 {
-                    v.advanceRunner(bases);
-//                    if (v.getCurrentBase()>=4)
-//                    {
-//                        m_runsScored++;
-//                    }
+                    v.advanceRunner(bases);             
                 }
                 
-                
-                
-                /*
-                for (var v:m_baseRunners)
-                {
-                    v.advanceRunner(bases);
-                    if (v.getCurrentBase() == 4)
-                    {
-                        scoredRunners.add(v);
-                        scoreRun(scoredRunners);
-                    }
-                }
-                */
             }
                 
             if (m_AB.checkIsOut()==true)
             {
+                m_positionInLineup++;
                 m_outs++;
                 System.out.println("*** Outs = " + m_outs + " ***");
             }
@@ -115,9 +91,11 @@ public class Inning
             if (v.getCurrentBase()>=4)
             {
                 m_runsScored++;
+                m_team.addRun();
+                m_pitcher.addRunsAllowed();
             }
         }
-        System.out.println("Runs Scored this Inning: " + m_runsScored);
+        System.out.println("\nRuns Scored this Half Inning: " + m_runsScored + "\n");
         m_baseRunners.clear();
     }
     

@@ -58,10 +58,14 @@ public class AtBat
         m_ballCounter=0;
     }
     
-    public int doAB()
+    public int doAB(Pitcher pitcher, Batter batter)
     {
+        m_batter = batter;
+        System.out.println("Batter: " + batter.getFullName() +"("+batter.getPosition()+")" + "\n");
+        //System.out.println("Pitcher: " + pitcher.getFullName() + " " + pitcher.getERA());
         while ((getStrikes() < 3) && (getBalls() < 4))
         {
+            pitcher.addToPitchCount();
             System.out.println(getCount());
             int check = m_pitch.doAction();       
             Boolean loop = true;
@@ -76,11 +80,10 @@ public class AtBat
                     m_ballCounter++;
                     break;
                 case 3:
-                    System.out.println("In Play!");
+                    System.out.println("In Play...");
                     loop = false;
                     int battedBallType = doInPlay();
                     return battedBallType;
-                   // break;
             }
             if (loop == false)
             {
@@ -98,6 +101,7 @@ public class AtBat
             {
                 System.out.println("Ball 4, take your base!");
                 clearCount(); 
+                m_batter.addWalk();
                 return 1;
             }          
         }   
@@ -115,6 +119,7 @@ public class AtBat
         else 
         {
             m_isOut = false;
+            m_batter.addHit();
         }
         clearCount();
         return check;
